@@ -9,6 +9,7 @@
 pub const PROOF_BACKEND: &str = "zcash/orchard 0.16.0; Halo 2; Orchard v2 circuit";
 pub const PROTOCOL_VERSION: u16 = 1;
 
+pub mod capsule;
 pub mod ledger;
 
 #[cfg(test)]

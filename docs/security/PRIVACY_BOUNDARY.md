@@ -17,3 +17,10 @@ Initial note insertion requires a signature from a configured Ed25519 issuance a
 The current implementation calls the unmodified, pinned Orchard v2/Halo 2 circuit. `verify_spend` performs pure proof and authorization verification and returns opaque checked transition data; `PrivateLedger::apply` enforces the anchor window and uniqueness atomically. It is a classical proof system; post-quantum security is not claimed. This does not mean a new 0PSP circuit inherits an audit or security result merely by using Halo 2. Any circuit, encoding, public-input, or verifier change creates a new relation that requires its own analysis and vectors.
 
 Session ratcheting is transport confidentiality and key evolution. It does not enforce value conservation or double-spend prevention. Ledger spends remain valid only through the shielded proof and authoritative state transition.
+
+
+## Pocket Seal transport metadata (prototype boundary)
+
+The version-1 framing primitive in `crates/protocol/src/capsule.rs` serializes exactly 51,200 bytes: a public version byte, public little-endian epoch ID, 16-byte opaque routing header, and opaque fixed-length sealed-blob slot. The codec does not encrypt or authenticate the blob. Do not submit sensitive plaintext to relays using this primitive.
+
+Epoch conversion and age/future-skew validation are implemented as standalone policy helpers, but the ledger acceptance path does not yet enforce the epoch policy. Public epochs and fixed size reduce only two possible sources of variation; they do not conceal source IP, gaps in cover traffic, timing, routing, or relay observations. No traffic-analysis-resistance claim is made until AEAD, a cover scheduler, relay transport and adversarial evaluation are implemented.
