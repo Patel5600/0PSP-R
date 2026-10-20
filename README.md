@@ -4,6 +4,12 @@
 
 "Absolute privacy" is not a cryptographic guarantee. The ledger and network can still observe transaction timing, request metadata, proof sizes, public nullifiers, output commitments, and accepted roots. Endpoint compromise and a malicious ledger operator are outside the proof privacy guarantee.
 
+## Pocket Seal transport-metadata layer (early implementation)
+
+Pocket Seal is the proposed fixed-size capsule + coarse-epoch + cover-traffic layer. The current branch implements only version-1 50 KiB capsule framing and a configurable epoch-validation primitive; it does **not** yet implement AEAD, real/cover payload encoding, a cover scheduler, relay transport, or ledger epoch enforcement. See [implementation status and privacy gaps](docs/POCKET_SEAL_STATUS.md) and the [privacy boundary](docs/security/PRIVACY_BOUNDARY.md).
+
+Do not interpret fixed-size framing as traffic-analysis resistance. Until encryption, regular cover scheduling, relay behavior and adversarial tests are implemented, the traffic seal is a design target rather than a delivered guarantee.
+
 ## Current implementation status
 
 This is an early implementation, **not production-ready**. The proof path uses the upstream Orchard v2 circuit from the version-pinned `orchard` 0.16.0 crate and its Halo 2 backend. The project does not fork or modify that circuit. A real proof-generation/verification test is present. SQLite state transition verifies the bundle and authorization, checks the proof anchor against a commitment tree reconstructed from ledger state, and atomically records nullifiers and output commitments. Replay is rejected across a database reopen.
