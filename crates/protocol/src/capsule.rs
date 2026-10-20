@@ -112,11 +112,7 @@ pub struct EpochPolicy {
 }
 
 impl EpochPolicy {
-    pub fn validate(
-        self,
-        capsule_epoch: u64,
-        current_epoch: u64,
-    ) -> Result<(), EpochError> {
+    pub fn validate(self, capsule_epoch: u64, current_epoch: u64) -> Result<(), EpochError> {
         let latest_allowed = current_epoch.saturating_add(self.max_future_skew_epochs);
         if capsule_epoch > latest_allowed {
             return Err(EpochError::TooFarInFuture {
@@ -161,7 +157,10 @@ impl fmt::Display for CapsuleError {
                 write!(formatter, "capsule length {actual}; expected {expected}")
             }
             Self::WrongBlobLength { expected, actual } => {
-                write!(formatter, "sealed blob length {actual}; expected {expected}")
+                write!(
+                    formatter,
+                    "sealed blob length {actual}; expected {expected}"
+                )
             }
             Self::UnsupportedVersion(version) => {
                 write!(formatter, "unsupported capsule version {version}")
